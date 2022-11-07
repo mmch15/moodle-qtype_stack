@@ -2,7 +2,7 @@
 
 It is sometime very useful to display the tree structure of an algebraic expression to a student.
 
-For example, the HTEM code for the tree of \(1+2x^3\) is given below.
+For example, the HTML code for the tree of \(1+2x^3\) is given below.
 
 ```
 <figure>
