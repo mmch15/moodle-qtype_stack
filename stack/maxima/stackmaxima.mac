@@ -3354,6 +3354,27 @@ table_zip_with(fn, T1, T2) := block(
 
 table_difference(T1, T2) := table_zip_with(lambda([ex1,ex2], if ex1=ex2 then ex1 else texcolor("red", ex1)), T1, T2)$
 
+/* ****************************************************** */
+/*                                                        */
+/*  Trees                                                 */
+/*                                                        */
+/* ****************************************************** */
+
+disptree(e) := sconcat("<figure><ul class='tree'><li>", tree_rec(e), "</li></ul></figure>");
+tree_rec(e) := block([treelist],
+  if atom(e) then return(sconcat("<codeatom>", stack_disp(e, "i") ,"</codeatom>")),
+  if is(safe_op(e)="treestop") then return(sconcat("<codeatom>", stack_disp(first(e), "i") ,"</codeatom>")),
+  if is(safe_op(e)="binomial") then return(sconcat("<codeatom>", stack_disp(e, "i") ,"</codeatom>")),
+  if is(safe_op(e)="disp_parens") then return(tree_rec(first(ex))),
+
+  treelist:flatten(["<code>", op(noun_logic_remove(e)), "</code><ul>", map(lambda([ex], sconcat("<li>", tree_rec(ex) ,"</li>")), args(e)), "</ul>"]),  
+  /* Lots of opportunities/need for fine-tuning. */
+  if is(safe_op(e)="int") then treelist:flatten(["<codeatom> \\( \\int \\cdots \\mathrm{d}", stack_disp(second(e), ""), " \\)</codeatom><ul><li>", tree_rec(first(e)), "</li></ul>"]), 
+  if is(safe_op(e)="sum" or safe_op(e)="'sum") then treelist:flatten(["<codeatom> \\( \\sum_{", stack_disp(second(e), ""), "=", stack_disp(third(e), ""), "}^{", stack_disp(fourth(e), ""), "} \\cdots \\)</codeatom><ul><li>", tree_rec(first(e)), "</li></ul>"]), 
+
+  apply(sconcat, treelist)
+);
+
 /* Slight hack to compile these functions and hence suppress warnings. */
 load(linearalgebra);
 

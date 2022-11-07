@@ -1874,4 +1874,30 @@ class castext_test extends qtype_stack_testcase {
 
         $this->assertEquals('\({bigcup_{k = 1}^{\infty } {A}_{k}}\)', $at2->get_rendered());
     }
+
+    /**
+     * @covers \qtype_stack\stack_cas_castext2_latex
+     * @covers \qtype_stack\stack_cas_keyval
+     */
+    public function test_display_tree() {
+        $options = new stack_options();
+        $options->set_option('simplify', false);
+        
+        $vars = "p1:x=a nounor b;\np2:x=(a nounor b);";
+        $at1 = new stack_cas_keyval($vars, $options, 123);
+        $this->assertTrue($at1->get_valid());
+        
+        $cs2 = $at1->get_session();
+        $at2 = castext2_evaluatable::make_from_source('{@p1@}: {@disptree(p1)@} <br/> {@p2@}: {@disptree(p2)@}', 'test-case');
+        $this->assertTrue($at2->get_valid());
+        $cs2->add_statement($at2);
+        $cs2->instantiate();
+        
+        $this->assertEquals("\({x=a\,{\mbox{ or }}\, b}\): <figure><ul class='tree'><li><code>or</code>" .
+            "<ul><li><code>=</code><ul><li><codeatom>\(x\)</codeatom></li><li><codeatom>\(a\)</codeatom>" .
+            "</li></ul></li><li><codeatom>\(b\)</codeatom></li></ul></li></ul></figure> <br/> " .
+            "\({x=\left(a\,{\mbox{ or }}\, b\\right)}\): <figure><ul class='tree'><li><code>=</code><ul>" .
+            "<li><codeatom>\(x\)</codeatom></li><li><code>or</code><ul><li><codeatom>\(a\)</codeatom></li>" .
+            "<li><codeatom>\(b\)</codeatom></li></ul></li></ul></li></ul></figure>", $at2->get_rendered());
+    }
 }
