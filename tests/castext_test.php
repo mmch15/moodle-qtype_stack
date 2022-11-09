@@ -1893,11 +1893,11 @@ class castext_test extends qtype_stack_testcase {
         $cs2->add_statement($at2);
         $cs2->instantiate();
         
-        $this->assertEquals("\({x=a\,{\mbox{ or }}\, b}\): <figure><ul class='tree'><li><code>or</code>" .
+        $this->assertEquals("\({x=a\,{\mbox{ or }}\, b}\): <ul class='tree'><li><code>or</code>" .
             "<ul><li><code>=</code><ul><li><codeatom>\(x\)</codeatom></li><li><codeatom>\(a\)</codeatom>" .
-            "</li></ul></li><li><codeatom>\(b\)</codeatom></li></ul></li></ul></figure> <br/> " .
-            "\({x=\left(a\,{\mbox{ or }}\, b\\right)}\): <figure><ul class='tree'><li><code>=</code><ul>" .
+            "</li></ul></li><li><codeatom>\(b\)</codeatom></li></ul></li></ul> <br/> " .
+            "\({x=\left(a\,{\mbox{ or }}\, b\\right)}\): <ul class='tree'><li><code>=</code><ul>" .
             "<li><codeatom>\(x\)</codeatom></li><li><code>or</code><ul><li><codeatom>\(a\)</codeatom></li>" .
-            "<li><codeatom>\(b\)</codeatom></li></ul></li></ul></li></ul></figure>", $at2->get_rendered());
+            "<li><codeatom>\(b\)</codeatom></li></ul></li></ul></li></ul>", $at2->get_rendered());
     }
 }

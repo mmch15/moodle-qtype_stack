@@ -89,4 +89,11 @@ p2:x=(a nounor b);
 ```
 with the following castext: `{@p1@}: {@disptree(p1)@}  <br/> {@p2@}: {@disptree(p2)@}` (with `simp:false`).
 
+## Styles
+
+In order to correctly display list items within the `<ul class='tree'>` list, additional styling is needed.  All list items must be styled with one of three tags.  The Maxima code ensures that operator nodes are styled slightly differently from atoms/terminal nodes.  
+
+1. `<code>` is used to display operators.
+2. `<codeatom>` is used to display atoms and terminal nodes.
+3. `<cell>` has minimal style, and is not used by the Maxima code.  This is intended for general use.
 

@@ -3360,7 +3360,7 @@ table_difference(T1, T2) := table_zip_with(lambda([ex1,ex2], if ex1=ex2 then ex1
 /*                                                        */
 /* ****************************************************** */
 
-disptree(e) := sconcat("<figure><ul class='tree'><li>", tree_rec(e), "</li></ul></figure>");
+disptree(e) := sconcat("<ul class='tree'><li>", tree_rec(e), "</li></ul>");
 tree_rec(e) := block([treelist],
   if atom(e) then return(sconcat("<codeatom>", stack_disp(e, "i") ,"</codeatom>")),
   if is(safe_op(e)="treestop") then return(sconcat("<codeatom>", stack_disp(first(e), "i") ,"</codeatom>")),
