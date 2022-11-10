@@ -3379,7 +3379,7 @@ tree_rec(e) := block([treelist],
   if is(safe_op(e)="sum" or safe_op(e)="'sum") then treelist:flatten(["<codeop> \\( \\sum_{", stack_disp(second(e), ""), "=", stack_disp(third(e), ""), "}^{", stack_disp(fourth(e), ""), "} \\cdots \\)</codeop><ul><li>", tree_rec(first(e)), "</li></ul>"]), 
 
   /* Apply the operator to as many arguments as we have, none of which print. */
-  if elementp(safe_op(e),tree_texlist) then treelist:flatten(["<codeop> \\( ", stack_disp(apply(op(e), ev(makelist(NULLNUM,k,1,length(args(e))),simp)), ""), "\\)</codeop><ul>", map(lambda([ex], sconcat("<li>", tree_rec(ex) ,"</li>")), args(e)), "</ul>"]), 
+  if elementp(safe_op(e),tree_texlist) or logicp(e) then treelist:flatten(["<codeop> \\( ", stack_disp(apply(op(e), ev(makelist(NULLNUM,k,1,length(args(e))),simp)), ""), "\\)</codeop><ul>", map(lambda([ex], sconcat("<li>", tree_rec(ex) ,"</li>")), args(e)), "</ul>"]), 
 
   apply(sconcat, treelist)
 );
