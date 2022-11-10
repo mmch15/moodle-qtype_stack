@@ -93,7 +93,8 @@ with the following castext: `{@p1@}: {@disptree(p1)@}  <br/> {@p2@}: {@disptree(
 
 In order to correctly display list items within the `<ul class='tree'>` list, additional styling is needed.  All list items must be styled with one of three tags.  The Maxima code ensures that operator nodes are styled slightly differently from atoms/terminal nodes.  
 
-1. `<code>` is used to display operators.
+1. `<code>` is used to display operators as html code.
+1. `<codeop>` is used to display operators as LaTeX.
 2. `<codeatom>` is used to display atoms and terminal nodes.
 3. `<cell>` has minimal style, and is not used by the Maxima code.  This is intended for general use.
 

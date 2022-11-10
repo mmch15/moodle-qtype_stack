@@ -1129,7 +1129,7 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
         .tree li:first-child:before {left: 50%;}
         .tree li:last-child:before {right: 50%;}
 
-        .tree code, .tree codeatom, .tree cell {
+        .tree code, .tree codeop,.tree codeatom, .tree cell {
             border: solid .1em #666;
             border-radius: .2em;
             display: inline-block;
@@ -1143,14 +1143,16 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
             color:DarkRed;
             background-color:LightCyan;
         }
-        .tree code {
+        .tree code, .tree codeop {
             border-radius: .2em;
+            color:Red;
             background-color:LemonChiffon;
         }
 
             /* | */
             .tree ul:before,
             .tree code:before,
+            .tree codeop:before,
             .tree codeatom:before, 
             .tree cell:before {
                 outline: solid 1px #666;
@@ -1163,6 +1165,7 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
                 top: -.5em;
             }
             .tree code:before,
+            .tree codeop:before,
             .tree codeatom:before,
             .tree cell:before {
                 top: -.55em;
@@ -1173,6 +1176,7 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
     .tree > li:before,
     .tree > li:after,
     .tree > li > code:before,
+    .tree > li > codeop:before,
     .tree > li > codeatom:before, 
     .tree > li > cell:before {
       outline: none;
