@@ -5,24 +5,23 @@ It is sometime very useful to display the tree structure of an algebraic express
 For example, the HTML code for the tree of \(1+2x^3\) is given below.
 
 ```
-<figure>
 <ul class='tree'>
   <li><code>+</code>
   <ul>
-    <li><codeatom>\(1\)</codeatom></li>
-    <li><codeatom>\(2\)</codeatom></li>
+    <li><span class='atom'>\(1\)</span></li>
     <li><code>*</code>
-    <ul>
-      <li><codeatom>\(\pi\)</codeatom></li>
+      <ul><li><span class='atom'>\(2\)</span></li>
       <li><code>^</code>
       <ul>
-        <li><codeatom>\(x\)</codeatom></li>
-        <li><codeatom>\(3\)</codeatom></li>
-      </ul></li>
-    </ul></li>
-  </ul></li>
+        <li><span class='atom'>\(x\)</span></li>
+        <li><span class='atom'>\(3\)</span></li>
+      </ul>
+      </li>
+    </ul>
+    </li>
+  </ul>
+  </li>
 </ul>
-</figure>
 ```
 This is displayed as follows (note LaTeX does not display correctly here).
 
@@ -31,24 +30,24 @@ This is displayed as follows (note LaTeX does not display correctly here).
 <ul class='tree'>
   <li><code>+</code>
   <ul>
-    <li><codeatom>\(1\)</codeatom></li>
-    <li><codeatom>\(2\)</codeatom></li>
+    <li><span class='atom'>\(1\)</span></li>
     <li><code>*</code>
-    <ul>
-      <li><codeatom>\(\pi\)</codeatom></li>
+      <ul><li><span class='atom'>\(2\)</span></li>
       <li><code>^</code>
       <ul>
-        <li><codeatom>\(x\)</codeatom></li>
-        <li><codeatom>\(3\)</codeatom></li>
-      </ul></li>
-    </ul></li>
-  </ul></li>
+        <li><span class='atom'>\(x\)</span></li>
+        <li><span class='atom'>\(3\)</span></li>
+      </ul>
+      </li>
+    </ul>
+    </li>
+  </ul>
+  </li>
 </ul>
 </figure>
 </p>
 
-
-The tree is displayed in pure HTML using CSS via the `<ul class='tree'>`.  Such trees could be written in HTML by hand.
+The tree is displayed in pure HTML using unordered lists `<ul>` and styled with CSS via the `<ul class='tree'>`.  Therefore, such trees could be written in HTML by hand.
 
 STACK provides a function `disptree` to generate the above tree diagram from a Maxima expression.  For example, use `{@disptree(1+2+pi*x^3)@}` in castext.  This function generates a string representing the tree of that expression, and is not an inert function.
 
@@ -61,15 +60,16 @@ STACK provides a function `treestop` to stop traversing the tree, and use the La
   <ul>
     <li><code>/</code>
     <ul>
-      <li><codeatom>\(1\)</codeatom></li>
-      <li><codeatom>\(1+x^2\)</codeatom></li>
-    </ul></li>
-    <li><codeatom>\(4\)</codeatom></li>
-  </ul></li>
+      <li><span class='atom'>\(1\)</span></li>
+      <li><span class='atom'>\(1+x^2\)</span></li>
+    </ul>
+    </li>
+    <li><span class='atom'>\(4\)</span></li>
+  </ul>
+  </li>
 </ul>
 </figure>
 </p>
-
 
 Note, because of the HTML generated, and the LaTeX inside the tree HTML, you cannot embed these trees inside displayed LaTeX using `\[ ... \]`.  The only way to display a tree is using `{@disptree(....)@}` as an isolated mathematical expression.
 
@@ -91,10 +91,16 @@ with the following castext: `{@p1@}: {@disptree(p1)@}  <br/> {@p2@}: {@disptree(
 
 ## Styles
 
-In order to correctly display list items within the `<ul class='tree'>` list, additional styling is needed.  All list items must be styled with one of three tags.  The Maxima code ensures that operator nodes are styled slightly differently from atoms/terminal nodes.  
+In order to correctly display list items within the `<ul class='tree'>` list, additional styling is needed.  All list items must be styled with one of the following tags.  The Maxima code ensures that operator nodes are styled slightly differently from atoms/terminal nodes. Some operators, such as integrals and sums, have special style rules applied.
 
 1. `<code>` is used to display operators as html code.
-1. `<codeop>` is used to display operators as LaTeX.
-2. `<codeatom>` is used to display atoms and terminal nodes.
-3. `<cell>` has minimal style, and is not used by the Maxima code.  This is intended for general use.
+1. `<span class='op'>` is used to display operators as LaTeX.
+2. `<span class='atom'>` is used to display atoms and terminal nodes.
+3. `<span class='cell'>` has minimal style, and is not used by the Maxima code.  This is intended for general use.
 
+The code does its best to respest the LaTeX output.  If you create special tex rules using `texput` you also have to tell the tree generation code to look for this rule.  STACK has a set `tree_texlist` of operators to which special rules apply.  To add a rule use the following.
+
+     texput(boo, "\\diamond");
+     tree_texlist:union(tree_texlist,{"boo"});
+
+Then, the operator `boo` will be typeset as \(\diamond\) in tree output, as well as in tex output.  E.g. try the following castext: `{@disptree(boo(a,b))@}`.

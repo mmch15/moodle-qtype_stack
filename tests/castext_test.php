@@ -1922,13 +1922,12 @@ class castext_test extends qtype_stack_testcase {
         $this->assertTrue($at2->get_valid());
         $cs2->add_statement($at2);
         $cs2->instantiate();
-        $this->assertEquals("\({x=a\,{\mbox{ or }}\, b}\): <ul class='tree'><li><codeop>\(\,{\mbox{ or }}\, \)" .
-            "</codeop><ul><li><code>=</code><ul><li><codeatom>\(x\)</codeatom></li><li><codeatom>\(a\)</codeatom>" .
-            "</li></ul></li><li><codeatom>\(b\)</codeatom></li></ul></li></ul> <br/> " .
-            "\({x=\left(a\,{\mbox{ or }}\, b\\right)}\): <ul class='tree'><li><code>=</code><ul>" .
-            "<li><codeatom>\(x\)</codeatom></li><li><codeop>\(\,{\mbox{ or }}\, \)" .
-            "</codeop><ul><li><codeatom>\(a\)</codeatom></li>" .
-            "<li><codeatom>\(b\)</codeatom></li></ul></li></ul></li></ul>", $at2->get_rendered());
+        $this->assertEquals("\({x=a\,{\mbox{ or }}\, b}\): <ul class='tree'><li><span class='op'>\(\,{\mbox{ or }}\, \)" .
+            "</span><ul><li><code>=</code><ul><li><span class='atom'>\(x\)</span></li><li><span class='atom'>\(a\)</span>" .
+            "</li></ul></li><li><span class='atom'>\(b\)</span></li></ul></li></ul> <br/> " .
+            "\({x=\left(a\,{\mbox{ or }}\, b\\right)}\): <ul class='tree'><li><code>=</code><ul><li><span class='atom'>" .
+            "\(x\)</span></li><li><span class='op'>\(\,{\mbox{ or }}\, \)</span><ul><li><span class='atom'>\(a\)</span>" .
+            "</li><li><span class='atom'>\(b\)</span></li></ul></li></ul></li></ul>", $at2->get_rendered());
 
         // An example needing some bespoke style in the output.
         $vars = "p1:1+'diff(sin(x*y),x,2);";
@@ -1940,42 +1939,42 @@ class castext_test extends qtype_stack_testcase {
         $cs2->add_statement($at2);
         $cs2->instantiate();
         $this->assertEquals("\({1+\left(\\frac{\mathrm{d}^2}{\mathrm{d} x^2} \sin \left( x\cdot y \\right)\\right)}\): " .
-            "<ul class='tree'><li><code>+</code><ul><li><codeatom>\(1\)</codeatom></li><li><codeop>" .
-            "\(\\frac{\mathrm{d}^2 }{\mathrm{d} x^2} \)</codeop><ul><li><code>sin</code><ul><li><code>*</code>" .
-            "<ul><li><codeatom>\(x\)</codeatom></li><li><codeatom>\(y\)</codeatom></li></ul></li></ul></li></ul></li>" .
+            "<ul class='tree'><li><code>+</code><ul><li><span class='atom'>\(1\)</span></li><li><span class='op'>" .
+            "\(\\frac{\mathrm{d}^2 }{\mathrm{d} x^2} \)</span><ul><li><code>sin</code><ul><li><code>*</code><ul><li>" .
+            "<span class='atom'>\(x\)</span></li><li><span class='atom'>\(y\)</span></li></ul></li></ul></li></ul></li>" .
             "</ul></li></ul>", $at2->get_rendered());
 
         $at2 = castext2_evaluatable::make_from_source('{@disptree(a+-gamma(x))@}', 'test-case');
         $this->assertTrue($at2->get_valid());
         $cs2->add_statement($at2);
         $cs2->instantiate();
-        $this->assertEquals("<ul class='tree'><li><codeop>\({ \pm }\)</codeop><ul><li><codeatom>\(a\)</codeatom>" .
-            "</li><li><codeop>\(\Gamma\)</codeop><ul><li><codeatom>\(x\)</codeatom></li></ul>" .
-            "</li></ul></li></ul>", $at2->get_rendered());
+        $this->assertEquals("<ul class='tree'><li><span class='op'>\({ \pm }\)</span><ul><li><span class='atom'>\(a\)" .
+            "</span></li><li><span class='op'>\(\Gamma\)</span><ul><li><span class='atom'>\(x\)</span></li></ul></li>" .
+            "</ul></li></ul>", $at2->get_rendered());
 
         $at2 = castext2_evaluatable::make_from_source('{@disptree(sqrt(x))@}', 'test-case');
         $this->assertTrue($at2->get_valid());
         $cs2->add_statement($at2);
         $cs2->instantiate();
-        $this->assertEquals("<ul class='tree'><li><codeop>\(\sqrt{}\)</codeop><ul><li>" .
-            "<codeatom>\(x\)</codeatom></li></ul></li></ul>", $at2->get_rendered());
+        $this->assertEquals("<ul class='tree'><li><span class='op'>\(\sqrt{}\)</span><ul><li>" .
+            "<span class='atom'>\(x\)</span></li></ul></li></ul>", $at2->get_rendered());
 
         $at2 = castext2_evaluatable::make_from_source("{@disptree('limit(1/(x+1),x,0))@}", 'test-case');
         $this->assertTrue($at2->get_valid());
         $cs2->add_statement($at2);
         $cs2->instantiate();
-        $this->assertEquals("<ul class='tree'><li><codeop>\(\lim_{x\\rightarrow0} \cdots \)</codeop>" .
-            "<ul><li><code>/</code><ul><li><codeatom>\(1\)</codeatom></li><li><code>+</code><ul><li>" .
-            "<codeatom>\(x\)</codeatom></li><li><codeatom>\(1\)</codeatom></li></ul></li></ul></li></ul></li></ul>",
-            $at2->get_rendered());
+        $this->assertEquals("<ul class='tree'><li><span class='op'>\(\lim_{x\\rightarrow{0}} \cdots \)</span><ul>" .
+            "<li><code>/</code><ul><li><span class='atom'>\(1\)</span></li><li><code>+</code><ul>" .
+            "<li><span class='atom'>\(x\)</span></li><li><span class='atom'>\(1\)</span></li></ul></li></ul>" .
+            "</li></ul></li></ul>", $at2->get_rendered());
 
         $at2 = castext2_evaluatable::make_from_source("{@disptree(2*matrix([a,b],[c,d]))@}", 'test-case');
         $this->assertTrue($at2->get_valid());
         $cs2->add_statement($at2);
         $cs2->instantiate();
-        $this->assertEquals("<ul class='tree'><li><code>*</code><ul><li><codeatom>\(2\)</codeatom></li><li><codeatom>".
-            "\(\left[\begin{array}{cc} a & b \\\\ c & d \\end{array}\\right]\)</codeatom></li></ul></li></ul>",
-            $at2->get_rendered());
+        $this->assertEquals("<ul class='tree'><li><code>*</code><ul><li><span class='atom'>\(2\)</span></li>" .
+            "<li><span class='atom'>\(\left[\begin{array}{cc} a & b \\\\ c & d \\end{array}\\right]\)</span></li>" .
+            "</ul></li></ul>", $at2->get_rendered());
     }
 
     /**
@@ -1997,8 +1996,8 @@ class castext_test extends qtype_stack_testcase {
         $cs2->add_statement($at2);
         $cs2->instantiate();
 
-        $this->assertEquals("<ul class='tree'><li><codeop>\(\diamond\)</codeop>" .
-            "<ul><li><codeatom>\(a\)</codeatom></li><li><codeatom>\(b\)</codeatom></li></ul></li></ul>",
+        $this->assertEquals("<ul class='tree'><li><span class='op'>\(\diamond\)</span><ul><li>" .
+            "<span class='atom'>\(a\)</span></li><li><span class='atom'>\(b\)</span></li></ul></li></ul>",
             $at2->get_rendered());
     }
 }

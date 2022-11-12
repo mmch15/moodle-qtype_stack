@@ -1135,11 +1135,10 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
 .tree li:last-child:before {
     right: 50%;
 }
-
-.tree code,
-.tree codeop,
-.tree codeatom,
-.tree cell {
+.tree span.atom,
+.tree span.op,
+.tree span.cell,
+.tree code {
     border: solid .1em #666;
     border-radius: .2em;
     display: inline-block;
@@ -1148,24 +1147,23 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
     position: relative;
 }
 /* If the tree represents DOM structure. */
-.tree codeatom {
+.tree span.atom {
     border-radius: .5em;
     color: DarkRed;
     background-color: LightCyan;
 }
 .tree code,
-.tree codeop {
+.tree span.op {
     border-radius: .2em;
     color: Red;
     background-color: LemonChiffon;
 }
-
 /* | */
 .tree ul:before,
-.tree code:before,
-.tree codeop:before,
-.tree codeatom:before,
-.tree cell:before {
+.tree span.atom:before,
+.tree span.op:before,
+.tree span.cell:before,
+.tree code:before {
     outline: solid 1px #666;
     content: "";
     height: .5em;
@@ -1175,10 +1173,10 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
 .tree ul:before {
     top: -.5em;
 }
-.tree code:before,
-.tree codeop:before,
-.tree codeatom:before,
-.tree cell:before {
+.tree span.atom:before,
+.tree span.op:before,
+.tree span.cell:before,
+.tree code:before {
     top: -.55em;
 }
 /* The root node doesn't connect upwards. */
@@ -1187,9 +1185,9 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
 }
 .tree > li:before,
 .tree > li:after,
-.tree > li > code:before,
-.tree > li > codeop:before,
-.tree > li > codeatom:before,
-.tree > li > cell:before {
+.tree > li > span.atom:before,
+.tree > li > span.op:before,
+.tree > li > span.cell:before,
+.tree > li > code:before {
     outline: none;
 }
