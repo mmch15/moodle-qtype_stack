@@ -1892,18 +1892,16 @@ class castext_test extends qtype_stack_testcase {
         $vars = "p1:x=a nounor b;\np2:x=(a nounor b);";
         $at1 = new stack_cas_keyval($vars, $options, 123);
         $this->assertTrue($at1->get_valid());
-
         $cs2 = $at1->get_session();
         $at2 = castext2_evaluatable::make_from_source('{@p1@}: {@disptree(p1)@} <br/> {@p2@}: {@disptree(p2)@}', 'test-case');
         $this->assertTrue($at2->get_valid());
         $cs2->add_statement($at2);
         $cs2->instantiate();
-
-        $this->assertEquals("\({x=a\,{\mbox{ or }}\, b}\): <ul class='tree'><li><codeop> \( \,{\mbox{ or }}\, \)" .
+        $this->assertEquals("\({x=a\,{\mbox{ or }}\, b}\): <ul class='tree'><li><codeop>\(\,{\mbox{ or }}\, \)" .
             "</codeop><ul><li><code>=</code><ul><li><codeatom>\(x\)</codeatom></li><li><codeatom>\(a\)</codeatom>" .
             "</li></ul></li><li><codeatom>\(b\)</codeatom></li></ul></li></ul> <br/> " .
             "\({x=\left(a\,{\mbox{ or }}\, b\\right)}\): <ul class='tree'><li><code>=</code><ul>" .
-            "<li><codeatom>\(x\)</codeatom></li><li><codeop> \( \,{\mbox{ or }}\, \)" .
+            "<li><codeatom>\(x\)</codeatom></li><li><codeop>\(\,{\mbox{ or }}\, \)" .
             "</codeop><ul><li><codeatom>\(a\)</codeatom></li>" .
             "<li><codeatom>\(b\)</codeatom></li></ul></li></ul></li></ul>", $at2->get_rendered());
 
@@ -1911,16 +1909,14 @@ class castext_test extends qtype_stack_testcase {
         $vars = "p1:1+'diff(sin(x*y),x,2);";
         $at1 = new stack_cas_keyval($vars, $options, 123);
         $this->assertTrue($at1->get_valid());
-
         $cs2 = $at1->get_session();
         $at2 = castext2_evaluatable::make_from_source('{@p1@}: {@disptree(p1)@}', 'test-case');
         $this->assertTrue($at2->get_valid());
         $cs2->add_statement($at2);
         $cs2->instantiate();
-
         $this->assertEquals("\({1+\left(\\frac{\mathrm{d}^2}{\mathrm{d} x^2} \sin \left( x\cdot y \\right)\\right)}\): " .
-            "<ul class='tree'><li><code>+</code><ul><li><codeatom>\(1\)</codeatom></li><li><codeop> " .
-            "\( \\frac{\mathrm{d}^2 }{\mathrm{d} x^2} \)</codeop><ul><li><code>sin</code><ul><li><code>*</code>" .
+            "<ul class='tree'><li><code>+</code><ul><li><codeatom>\(1\)</codeatom></li><li><codeop>" .
+            "\(\\frac{\mathrm{d}^2 }{\mathrm{d} x^2} \)</codeop><ul><li><code>sin</code><ul><li><code>*</code>" .
             "<ul><li><codeatom>\(x\)</codeatom></li><li><codeatom>\(y\)</codeatom></li></ul></li></ul></li></ul></li>" .
             "</ul></li></ul>", $at2->get_rendered());
 
@@ -1928,9 +1924,56 @@ class castext_test extends qtype_stack_testcase {
         $this->assertTrue($at2->get_valid());
         $cs2->add_statement($at2);
         $cs2->instantiate();
-
-        $this->assertEquals("<ul class='tree'><li><codeop> \( { \pm }\)</codeop><ul><li><codeatom>\(a\)</codeatom>" .
-            "</li><li><codeop> \( \Gamma\left(\\right)\)</codeop><ul><li><codeatom>\(x\)</codeatom></li></ul>" .
+        $this->assertEquals("<ul class='tree'><li><codeop>\({ \pm }\)</codeop><ul><li><codeatom>\(a\)</codeatom>" .
+            "</li><li><codeop>\(\Gamma\)</codeop><ul><li><codeatom>\(x\)</codeatom></li></ul>" .
             "</li></ul></li></ul>", $at2->get_rendered());
+
+        $at2 = castext2_evaluatable::make_from_source('{@disptree(sqrt(x))@}', 'test-case');
+        $this->assertTrue($at2->get_valid());
+        $cs2->add_statement($at2);
+        $cs2->instantiate();
+        $this->assertEquals("<ul class='tree'><li><codeop>\(\sqrt{}\)</codeop><ul><li>" .
+            "<codeatom>\(x\)</codeatom></li></ul></li></ul>", $at2->get_rendered());
+
+        $at2 = castext2_evaluatable::make_from_source("{@disptree('limit(1/(x+1),x,0))@}", 'test-case');
+        $this->assertTrue($at2->get_valid());
+        $cs2->add_statement($at2);
+        $cs2->instantiate();
+        $this->assertEquals("<ul class='tree'><li><codeop>\(\lim_{x\\rightarrow0} \cdots \)</codeop>" .
+            "<ul><li><code>/</code><ul><li><codeatom>\(1\)</codeatom></li><li><code>+</code><ul><li>" .
+            "<codeatom>\(x\)</codeatom></li><li><codeatom>\(1\)</codeatom></li></ul></li></ul></li></ul></li></ul>",
+            $at2->get_rendered());
+
+        $at2 = castext2_evaluatable::make_from_source("{@disptree(2*matrix([a,b],[c,d]))@}", 'test-case');
+        $this->assertTrue($at2->get_valid());
+        $cs2->add_statement($at2);
+        $cs2->instantiate();
+        $this->assertEquals("<ul class='tree'><li><code>*</code><ul><li><codeatom>\(2\)</codeatom></li><li><codeatom>".
+            "\(\left[\begin{array}{cc} a & b \\\\ c & d \\end{array}\\right]\)</codeatom></li></ul></li></ul>",
+            $at2->get_rendered());
+    }
+
+    /**
+     * @covers \qtype_stack\stack_cas_castext2_latex
+     * @covers \qtype_stack\stack_cas_keyval
+     */
+    public function test_display_tree_texput() {
+        $options = new stack_options();
+        $options->set_option('simplify', false);
+
+        $vars = 'tree_texlist:union(tree_texlist,{"boo"});'.
+                "\ntexput(boo, \"\\\\diamond\");";
+        $at1 = new stack_cas_keyval($vars, $options, 123);
+        $this->assertTrue($at1->get_valid());
+
+        $cs2 = $at1->get_session();
+        $at2 = castext2_evaluatable::make_from_source('{@disptree(boo(a,b))@}', 'test-case');
+        $this->assertTrue($at2->get_valid());
+        $cs2->add_statement($at2);
+        $cs2->instantiate();
+
+        $this->assertEquals("<ul class='tree'><li><codeop>\(\diamond\)</codeop>" .
+            "<ul><li><codeatom>\(a\)</codeatom></li><li><codeatom>\(b\)</codeatom></li></ul></li></ul>",
+            $at2->get_rendered());
     }
 }
