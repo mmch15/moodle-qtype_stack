@@ -1150,21 +1150,21 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
 /* If the tree represents DOM structure. */
 .tree codeatom {
     border-radius: .5em;
-    color:DarkRed;
-    background-color:LightCyan;
+    color: DarkRed;
+    background-color: LightCyan;
 }
 .tree code,
 .tree codeop {
     border-radius: .2em;
-    color:Red;
-    background-color:LemonChiffon;
+    color: Red;
+    background-color: LemonChiffon;
 }
 
 /* | */
 .tree ul:before,
 .tree code:before,
 .tree codeop:before,
-.tree codeatom:before, 
+.tree codeatom:before,
 .tree cell:before {
     outline: solid 1px #666;
     content: "";
