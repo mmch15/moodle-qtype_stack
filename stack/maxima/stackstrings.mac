@@ -425,7 +425,7 @@ ct2_latex(%_val, %_mode, %_simp):=block([%_tmp,simp],
    /* If in math-mode, i.e. not requesting wrapping wrap with braces. */
    if %_mode = "" or %_mode = "m" then %_tmp: sconcat("{", %_tmp, "}"),
    if %_mode = "m" or %_mode = "im" then %_tmp: str_to_md(%_tmp),
-   return(%_tmp)
+   return(["smlt", %_tmp])
  ) else if listp(%_tmp) and length(%_tmp) > 0 and is(%_tmp[1] = "%root") then (
    /* If we receive inline CASText then pass it through. */
    if is(length(%_tmp) = 2) then

@@ -99,14 +99,19 @@ class castext_test extends qtype_stack_testcase {
                 array('\[{@a*b@}\]', $a1, true, '\[{x^2\cdot {\left(x+1\right)}^2}\]'),
                 array('{@', null, true, '{@'), // The new parser allwos use of this text fragemt everywhere.
                 array('{@(x^2@}', null, false, false),
-                array('{@1/0@}', null, true, '1/0'), // Do we want this to work when simp:true?
-                // If so then the compiler will need to generate separate errcatch logic for everything just in case.
-                array('\(1+{@1/0@}\)', null, true, '\(1+{1/0}\)'),
+                array('{@1/0@}', null, true,
+                    '<h3>Rendering of text content failed.</h3><ul><li>Division by zero.</li></ul>'),
+                array('\(1+{@1/0@}\)', null, true,
+                    '<h3>Rendering of text content failed.</h3><ul><li>Division by zero.</li></ul>'),
                 array('{@x^2@}', $a2, false, null),
                 array('\(\frac{@"0.10"@}{@"0.10"@}\)', null, true, '\(\frac{0.10}{0.10}\)'),
                 // This last one looks very odd.  It records a change in v4.0 where we stop supporting dollars.
                 array('$${@x^2@}$$', null, true, '$$\({x^2}\)$$'),
-        );
+                // Generate a maxima error other than division by zero.
+                array('{@matrix([a],[b]).matrix([1,2],[3,4])@}', null, true,
+                    '<h3>Rendering of text content failed.</h3><ul><li>MULTIPLYMATRICES: ' .
+                    'attempt to multiply nonconformable matrices.</li></ul>'),
+                );
 
         foreach ($cases as $case) {
             $this->basic_castext_instantiation($case[0], $case[1], $case[2], $case[3]);
@@ -159,7 +164,8 @@ class castext_test extends qtype_stack_testcase {
         $cs1->instantiate();
 
         $this->assertEquals('Division by zero.', $cs1->get_errors());
-        $this->assertEquals('1/0', $ct->get_rendered());
+        $this->assertEquals('<h3>Rendering of text content failed.</h3><ul><li>Division by zero.</li></ul>',
+            $ct->get_rendered());
         $this->assertTrue($ct->get_valid());
         $this->assertEquals('Division by zero.',
             $ct->get_errors());
@@ -1893,11 +1899,12 @@ class castext_test extends qtype_stack_testcase {
         $cs2->add_statement($at2);
         $cs2->instantiate();
 
-        $this->assertEquals("\({x=a\,{\mbox{ or }}\, b}\): <ul class='tree'><li><code>or</code>" .
-            "<ul><li><code>=</code><ul><li><codeatom>\(x\)</codeatom></li><li><codeatom>\(a\)</codeatom>" .
+        $this->assertEquals("\({x=a\,{\mbox{ or }}\, b}\): <ul class='tree'><li><codeop> \( \,{\mbox{ or }}\, \)" .
+            "</codeop><ul><li><code>=</code><ul><li><codeatom>\(x\)</codeatom></li><li><codeatom>\(a\)</codeatom>" .
             "</li></ul></li><li><codeatom>\(b\)</codeatom></li></ul></li></ul> <br/> " .
             "\({x=\left(a\,{\mbox{ or }}\, b\\right)}\): <ul class='tree'><li><code>=</code><ul>" .
-            "<li><codeatom>\(x\)</codeatom></li><li><code>or</code><ul><li><codeatom>\(a\)</codeatom></li>" .
+            "<li><codeatom>\(x\)</codeatom></li><li><codeop> \( \,{\mbox{ or }}\, \)" .
+            "</codeop><ul><li><codeatom>\(a\)</codeatom></li>" .
             "<li><codeatom>\(b\)</codeatom></li></ul></li></ul></li></ul>", $at2->get_rendered());
 
         // An example needing some bespoke style in the output.
